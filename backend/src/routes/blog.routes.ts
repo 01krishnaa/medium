@@ -28,19 +28,14 @@ blogRouter.use(async (c, next) => {
   }
 
   c.set("userId", payload.id);
+  console.log(typeof payload.id);
   await next();
-});
-
-blogRouter.post("/qwerty", async (c) => {
-  return c.text("tfgyhnjkml");
 });
 
 blogRouter.post("/create", async (c) => {
   const prisma = new PrismaClient({
     datasourceUrl: c.env.DATABASE_URL,
   }).$extends(withAccelerate());
-
-  console.log("payload");
 
   const body = await c.req.json();
   const userId = c.get("userId");
