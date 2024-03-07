@@ -2,6 +2,7 @@ import { withAccelerate } from "@prisma/extension-accelerate";
 import { Hono } from "hono";
 import { PrismaClient } from "@prisma/client/edge";
 import { verify } from "hono/jwt";
+import { createBlogInput, updateBlogInput } from "@kronymous/medium-common";
 
 export const blogRouter = new Hono<{
   Bindings: {
@@ -38,17 +39,32 @@ blogRouter.post("/create", async (c) => {
   }).$extends(withAccelerate());
 
   const body = await c.req.json();
+
+  const { success } = createBlogInput.safeParse(body);
+
+  if (!success) {
+    c.status(411);
+    return c.json({ msg: "inputs not correct" });
+  }
+
   const userId = c.get("userId");
 
-  const blog = await prisma.post.create({
-    data: {
-      title: body.title,
-      content: body.content,
-      authorId: userId,
-    },
-  });
+  try {
+    const blog = await prisma.post.create({
+      data: {
+        title: body.title,
+        content: body.content,
+        authorId: userId,
+      },
+    });
 
-  return c.json({ id: blog.id });
+    return c.json({ id: blog.id });
+  } catch (error) {
+    return c.json({
+      msg: "Can't creaete post",
+      error,
+    });
+  }
 });
 
 blogRouter.put("/update", async (c) => {
@@ -57,17 +73,33 @@ blogRouter.put("/update", async (c) => {
   }).$extends(withAccelerate());
 
   const body = await c.req.json();
+
+  const { success } = updateBlogInput.safeParse(body);
+
+  if (!success) {
+    c.status(411);
+    return c.json({ msg: "inputs not correct" });
+  }
+
   const userId = c.get("userId");
 
-  const blog = await prisma.post.update({
-    where: { authorId: userId, id: body.id },
-    data: {
-      title: body.title,
-      content: body.content,
-    },
-  });
-
-  return c.json({ id: blog.id });
+  try {
+    const blog = await prisma.post.update({
+      where: { authorId: userId, id: body.id },
+      data: {
+        title: body.title,
+        content: body.content,
+      },
+    });
+  
+    return c.json({ id: blog.id });
+  } catch (error) {
+    return c.json({
+      msg: "Post can not be updated",
+      error,
+    });
+    
+  }
 });
 
 blogRouter.get("/bulk", async (c) => {
