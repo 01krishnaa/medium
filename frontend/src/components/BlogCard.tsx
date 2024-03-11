@@ -1,4 +1,7 @@
+import { Link } from "react-router-dom";
+
 interface BlogCardProps {
+  id: string;
   authorName: string;
   title: string;
   content: string;
@@ -6,24 +9,27 @@ interface BlogCardProps {
 }
 
 const BlogCard = ({
+  id,
   authorName,
   title,
   content,
   publishedDate,
 }: BlogCardProps) => {
   return (
-    <div className="w-1/2 mx-auto p-4">
-      <div className="flex">
-        <Avatar author={authorName} />
-        <div className="mx-4"> {authorName} </div>
-        <div className="text-gray-500">{publishedDate}</div>
+    <Link to={`/blog/${id}`}>
+      <div className="w-1/2 mx-auto p-4">
+        <div className="flex">
+          <Avatar author={authorName} />
+          <div className="mx-4"> {authorName} </div>
+          <div className="text-gray-500">{publishedDate}</div>
+        </div>
+        <div className="font-semibold text-3xl">{title}</div>
+        <div>{content.slice(0, 180) + "..."}</div>
+        <div className="border-b border-slate-300 py-3">
+          {Math.ceil(content.length / 100) + " minute(s) read"}
+        </div>
       </div>
-      <div className="font-semibold text-3xl">{title}</div>
-      <div>{content.slice(0, 180) + "..."}</div>
-      <div className="border-b border-slate-300 py-3">
-        {Math.ceil(content.length / 100) + " minute(s) read"}
-      </div>
-    </div>
+    </Link>
   );
 };
 
@@ -40,7 +46,7 @@ export function Avatar({
         size === "small" ? "w-6" : "w-10"
       } text-center rounded-full ${size === "big" && "py-2"}`}
     >
-      {author[0]}
+      {author[0].toUpperCase()}
     </div>
   );
 }

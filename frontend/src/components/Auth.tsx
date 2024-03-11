@@ -20,7 +20,7 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
       );
       const jwt = resp.data.token;
 
-      localStorage.setItem("token", jwt);
+      localStorage.setItem("token", `Bearer ${jwt}`);
       navigate("/blogs");
     } catch (error) {
       alert("error while signin");
