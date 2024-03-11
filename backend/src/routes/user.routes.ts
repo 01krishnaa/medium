@@ -71,6 +71,7 @@ userRouter.post("/signin", async (c) => {
 
     return c.json({ token, msg: "User signedup" });
   } catch (error) {
+    c.status(411);
     return c.json({
       msg: "User signin failed",
       error,

@@ -20,6 +20,7 @@ blogRouter.use(async (c, next) => {
     c.status(401);
     return c.json({ error: "unauthorized" });
   }
+
   const token = jwt.split(" ")[1];
 
   const payload = await verify(token, c.env.JWT_SECRET);
@@ -61,7 +62,7 @@ blogRouter.post("/create", async (c) => {
     return c.json({ id: blog.id });
   } catch (error) {
     return c.json({
-      msg: "Can't creaete post",
+      msg: "Can't create post",
       error,
     });
   }
@@ -91,14 +92,13 @@ blogRouter.put("/update", async (c) => {
         content: body.content,
       },
     });
-  
+
     return c.json({ id: blog.id });
   } catch (error) {
     return c.json({
       msg: "Post can not be updated",
       error,
     });
-    
   }
 });
 
@@ -107,9 +107,28 @@ blogRouter.get("/bulk", async (c) => {
     datasourceUrl: c.env.DATABASE_URL,
   }).$extends(withAccelerate());
 
-  const blogs = await prisma.post.findMany();
+  try {
+    const blogs = await prisma.post.findMany({
+      select: {
+        content: true,
+        title: true,
+        id: true,
+        authoe: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
 
-  return c.json(blogs);
+    return c.json(blogs);
+  } catch (error) {
+    c.status(411);
+    return c.json({
+      msg: "Blogs fetch error",
+      error,
+    });
+  }
 });
 
 blogRouter.get("/:id", async (c) => {
@@ -121,6 +140,16 @@ blogRouter.get("/:id", async (c) => {
 
   const blog = await prisma.post.findFirst({
     where: { id },
+    select: {
+      title: true,
+      content: true,
+      id: true,
+      authoe: {
+        select: {
+          name: true,
+        },
+      },
+    },
   });
 
   return c.json(blog);
