@@ -1,5 +1,18 @@
+import { useParams } from "react-router-dom";
+import { useBlog } from "../hooks";
+import FullBlog from "../components/FullBlog";
+
 const Blog = () => {
-  return <div>Blog</div>;
+  const { id } = useParams();
+  //@ts-ignore
+  const { loading, blog } = useBlog({ id: id || "" });
+
+  if (loading) return <div>loading ...: </div>;
+  return (
+    <div>
+      <FullBlog blog={blog} />
+    </div>
+  );
 };
 
 export default Blog;

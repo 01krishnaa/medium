@@ -1,4 +1,4 @@
-import { SignupInput } from "@kronymous/medium-common2";
+import { SignupInput } from "@kronymous/medium-common4";
 import { ChangeEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { BACKEND_URL } from "../config";

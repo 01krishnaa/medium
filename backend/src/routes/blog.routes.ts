@@ -2,7 +2,7 @@ import { withAccelerate } from "@prisma/extension-accelerate";
 import { Hono } from "hono";
 import { PrismaClient } from "@prisma/client/edge";
 import { verify } from "hono/jwt";
-import { createBlogInput, updateBlogInput } from "@kronymous/medium-common2";
+import { createBlogInput, updateBlogInput } from "@kronymous/medium-common4";
 
 export const blogRouter = new Hono<{
   Bindings: {
@@ -40,6 +40,7 @@ blogRouter.post("/create", async (c) => {
   }).$extends(withAccelerate());
 
   const body = await c.req.json();
+  console.log(body)
 
   const { success } = createBlogInput.safeParse(body);
 
@@ -61,6 +62,7 @@ blogRouter.post("/create", async (c) => {
 
     return c.json({ id: blog.id });
   } catch (error) {
+    c.status(422);
     return c.json({
       msg: "Can't create post",
       error,
@@ -138,19 +140,27 @@ blogRouter.get("/:id", async (c) => {
 
   const id = c.req.param("id");
 
-  const blog = await prisma.post.findFirst({
-    where: { id },
-    select: {
-      title: true,
-      content: true,
-      id: true,
-      authoe: {
-        select: {
-          name: true,
+  try {
+    const blog = await prisma.post.findFirst({
+      where: { id },
+      select: {
+        title: true,
+        content: true,
+        id: true,
+        authoe: {
+          select: {
+            name: true,
+          },
         },
       },
-    },
-  });
+    });
 
-  return c.json(blog);
+    return c.json(blog);
+  } catch (error) {
+    c.status(411);
+    return c.json({
+      msg: "Cant fetch the blog",
+      error,
+    });
+  }
 });

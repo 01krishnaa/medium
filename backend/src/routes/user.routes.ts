@@ -2,7 +2,7 @@ import { withAccelerate } from "@prisma/extension-accelerate";
 import { Hono } from "hono";
 import { PrismaClient } from "@prisma/client/edge";
 import { sign } from "hono/jwt";
-import { signinInput, signupInput } from "@kronymous/medium-common2";
+import { signinInput, signupInput } from "@kronymous/medium-common4";
 
 export const userRouter = new Hono<{
   Bindings: {
@@ -34,7 +34,7 @@ userRouter.post("/signup", async (c) => {
     });
     const token = await sign({ id: user.id }, c.env.JWT_SECRET);
 
-    return c.json({ user,token, msg: "User signed up" });
+    return c.json({ user, token, msg: "User signed up" });
   } catch (error) {
     return c.json({
       msg: "User signup failed",
