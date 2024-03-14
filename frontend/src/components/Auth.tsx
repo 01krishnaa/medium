@@ -3,9 +3,11 @@ import { ChangeEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { BACKEND_URL } from "../config";
 import axios from "axios";
+import Spinner from "./Spinner";
 
 export const Auth = ({ type }: { type: "signup" | "signin" }) => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [postInputs, setPostInputs] = useState<SignupInput>({
     name: "",
     email: "",
@@ -14,18 +16,31 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
 
   async function sendRequest() {
     try {
+      setLoading(true);
       const resp = await axios.post(
         `${BACKEND_URL}/api/v1/user/${type === "signup" ? "signup" : "signin"}`,
         postInputs
       );
+      setLoading(false);
       const jwt = resp.data.token;
 
       localStorage.setItem("token", `Bearer ${jwt}`);
+
       navigate("/blogs");
     } catch (error) {
       alert("error while signin");
     }
   }
+  if (loading)
+    return (
+      <>
+        <div className="flex justify-center ">
+          <div className="my-80">
+            <Spinner />
+          </div>
+        </div>
+      </>
+    );
 
   return (
     <>

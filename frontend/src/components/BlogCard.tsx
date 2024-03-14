@@ -16,8 +16,8 @@ const BlogCard = ({
   publishedDate,
 }: BlogCardProps) => {
   return (
-    <Link to={`/blog/${id}`}>
-      <div className="w-1/2 mx-auto p-4">
+    <div className="w-1/2 mx-auto p-4">
+      <Link to={`/blog/${id}`}>
         <div className="flex">
           <Avatar author={authorName} />
           <div className="mx-4"> {authorName} </div>
@@ -28,8 +28,8 @@ const BlogCard = ({
         <div className="border-b border-slate-300 py-3">
           {Math.ceil(content.length / 100) + " minute(s) read"}
         </div>
-      </div>
-    </Link>
+      </Link>
+    </div>
   );
 };
 
