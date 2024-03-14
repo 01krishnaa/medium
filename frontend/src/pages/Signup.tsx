@@ -6,7 +6,7 @@ export const Signup = () => {
     <>
       <div className="grid md:grid-cols-2">
         <div>
-          <Auth type={"signup"} />
+          <Auth type={""} />
         </div>
         <div className="hidden md:block">
           <Quote />

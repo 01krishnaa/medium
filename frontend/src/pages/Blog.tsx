@@ -9,7 +9,7 @@ const Blog = () => {
   //@ts-ignore
   const { loading, blog } = useBlog({ id: id || "" });
 
-  if (loading)
+  if (loading || !blog)
     return (
       <>
         <Appbar />

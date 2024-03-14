@@ -5,7 +5,7 @@ import { BACKEND_URL } from "../config";
 import axios from "axios";
 import Spinner from "./Spinner";
 
-export const Auth = ({ type }: { type: "signup" | "signin" }) => {
+export const Auth = ({ type }: { type: "" | "signin" }) => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [postInputs, setPostInputs] = useState<SignupInput>({
@@ -18,7 +18,7 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
     try {
       setLoading(true);
       const resp = await axios.post(
-        `${BACKEND_URL}/api/v1/user/${type === "signup" ? "signup" : "signin"}`,
+        `${BACKEND_URL}/api/v1/user/${type === "" ? "" : "signin"}`,
         postInputs
       );
       setLoading(false);
@@ -45,19 +45,18 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
   return (
     <>
       <div className="flex items-center justify-center h-screen flex-col">
-        <div className="text-4xl font-bold">Create an account</div>
+        <div className="text-4xl font-bold mb-3">
+          {type === "signin" ? "Welcome back" : "Create an account"}
+        </div>
         <div className="text-slate-500">
           {type === "signin"
             ? "Don't have an account"
             : "Already have an account?"}
-          <Link
-            className="underline pl-2"
-            to={type == "signup" ? "/signin" : "/signup"}
-          >
-            {type == "signup" ? "Login" : "Signup"}
+          <Link className="underline pl-2" to={type == "" ? "/signin" : "/"}>
+            {type == "" ? "Login" : "Signup"}
           </Link>
         </div>
-        {type == "signup" && (
+        {type == "" && (
           <InputBox
             type="text"
             label="Name"
@@ -88,7 +87,7 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
           type="button"
           className="text-white w-1/2 mt-9 bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
         >
-          {type == "signup" ? "Sign Up" : "Login"}
+          {type == "" ? "Sign Up" : "Login"}
         </button>
       </div>
     </>
