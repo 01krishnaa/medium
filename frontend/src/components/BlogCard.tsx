@@ -24,7 +24,10 @@ const BlogCard = ({
           <div className="text-gray-500">{publishedDate}</div>
         </div>
         <div className="font-semibold text-3xl">{title}</div>
-        <div>{content.slice(0, 180) + "..."}</div>
+        <div className="hidden md:block">
+          <div>{content.slice(0, 180) + "..."}</div>
+        </div>
+
         <div className="border-b border-slate-300 py-3">
           {Math.ceil(content.length / 100) + " minute(s) read"}
         </div>
