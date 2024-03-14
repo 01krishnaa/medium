@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Avatar } from "./BlogCard";
 
 const Appbar = () => {
@@ -6,9 +6,11 @@ const Appbar = () => {
   return (
     <>
       <div className="flex justify-between px-5 py-3 border-b border-slate-300">
-        <div className="flex flex-col justify-center font-semibold text-2xl">
-          Medium
-        </div>
+        <Link to={"/blogs"}>
+          <div className="flex flex-col justify-center font-semibold text-2xl">
+            Medium
+          </div>
+        </Link>
         <div className="flex">
           <button
             //@ts-ignore

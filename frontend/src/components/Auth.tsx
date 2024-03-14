@@ -18,7 +18,7 @@ export const Auth = ({ type }: { type: "" | "signin" }) => {
     try {
       setLoading(true);
       const resp = await axios.post(
-        `${BACKEND_URL}/api/v1/user/${type === "" ? "" : "signin"}`,
+        `${BACKEND_URL}/api/v1/user/${type === "" ? "signup" : "signin"}`,
         postInputs
       );
       setLoading(false);
